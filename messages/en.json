@@ -1,0 +1,53 @@
+{
+  "HomePage": {
+    "Hero": {
+      "title": "Find property service providers in your city",
+      "description": "Search by service and city to connect with trusted companies near you. View their work and get in touch — quick, easy, and reliable.",
+      "searchPlaceholder": "Search for services or companies",
+      "searchSuggest": "Try searching for a"
+    },
+    "Feature": {
+      "title": "Achieve your home improvement needs in only three steps",
+      "step1": "Choose your service",
+      "step2": "Filter your location",
+      "step3": "Browse and connect"
+    },
+    "Categories": {
+      "title": "Explore Popular Service Categories"
+    },
+    "PopularServices": {
+      "title": "Most viewed services",
+      "viewAll": "View All Services"
+    },
+    "Services": {
+      "title": "Easily find property service providers in",
+      "viewAll": "View All Providers"
+    },
+    "Ads": {
+      "title": "Simplify your search",
+      "description": "Easily find and connect with professional service providers anywhere"
+    },
+    "Card": {
+      "viewProfile": "View Profile"
+    }
+  },
+  "Header": {
+    "findProvider": "Find Provider",
+    "join": "Join as a provider",
+    "login": "Login",
+    "signup": "Sign Up",
+    "lang": "العربية"
+  },
+  "Footer": {
+    "description": "baiitna, making it simple to find the right experts in your city.",
+    "about": "About Us",
+    "contact": "Contact Us",
+    "business": "baiitna for Business",
+    "blog": "Blog",
+    "all_services": "All Services",
+    "faq": "FAQ",
+    "privacy": "Privacy Policy",
+    "terms": "Terms and Conditions",
+    "rights_reserved": "baiitna. All rights reserved."
+  }
+}

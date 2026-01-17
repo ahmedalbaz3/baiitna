@@ -1,0 +1,87 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* Colors */
+  --color-background: var(--background);
+  --color-cream: var(--background-cream);
+  --color-foreground: var(--foreground);
+  --color-text-primary: var(--text-primary);
+  --color-primary: var(--primary);
+  --color-hover: var(--hover);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+
+  /* Fonts */
+  --font-sans: var(--font-noto);
+
+  /* Custom Spacing & Typography */
+  --spacing-section-py: 104px;
+  --spacing-sm-section-py: 52px;
+  --spacing-hero-py: 80px;
+  --spacing-gap-xs: 10px;
+  --spacing-gap-sm: 16px;
+  --spacing-gap-md: 24px;
+
+  --font-size-h1: clamp(28px, 5vw, 46px);
+  --font-size-h2: clamp(22px, 5vw, 46px);
+  --font-size-p: clamp(14px, 2vw, 24px);
+  --font-size-p-sm: clamp(12px, 1.5vw, 14px);
+  --font-size-titles-sm: clamp(14px, 2vw, 16px);
+  --font-size-titles-md: clamp(20px, 3vw, 32px);
+}
+
+:root {
+  /* Font Family */
+  --font-noto: "Noto Sans", "Noto Sans Arabic", sans-serif;
+
+  /* Color Mapping (Converted to OKLCH for v4 consistency) */
+  --background: #f5f1ea; /* #f7f3eb - Cream */
+  --background-cream: #fcfaf7;
+
+  --foreground: #000000; /* black */
+  --text-primary: white;
+  --primary: #8035d2; /* #8035d2 - Purple */
+  --hover: #5f318d;
+  --secondary: #e5f645; /* #ebf86c - Neon Lime */
+  --accent: #bbb5ff; /* #cca4ff - Lavender */
+  --muted: #a2d4ff; /* #abd1ff - Light Blue */
+
+  /* UI Elements */
+  --border: #0a0a0a1a;
+  --radius: 0.625rem;
+}
+
+.dark {
+  /* Simple inversion for Dark Mode - You can refine these values */
+  --background: oklch(0.145 0 0); /* Dark Grey/Black */
+  --foreground: oklch(0.96 0.01 80); /* Cream text */
+  --primary: oklch(0.65 0.2 300); /* Lighter Purple for contrast */
+}
+
+@layer base {
+  * {
+    @apply m-0 p-0 box-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  .container {
+    @apply mx-auto flex items-center justify-between px-5 md:px-2;
+  }
+}
+
+.lucide.lucide-chevron-down {
+  @apply w-5 h-5;
+}
+
+.result-card {
+  @apply py-3 border-b-2 border-b-transparent;
+}
+.result-card.focused {
+  @apply text-primary  border-b-primary;
+}

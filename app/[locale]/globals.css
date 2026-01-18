@@ -85,3 +85,11 @@
 .result-card.focused {
   @apply text-primary  border-b-primary;
 }
+
+.provider-scroll:hover .provider-icon {
+  @apply opacity-100;
+}
+
+.provider-icon {
+  @apply absolute  -top-2 size-9 rounded-full  z-20 grid place-items-center bg-accent cursor-pointer opacity-0 hover:opacity-100 duration-200;
+}

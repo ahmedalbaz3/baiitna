@@ -5,6 +5,7 @@ import Button from "../shared/Button";
 import NavMenu from "../ui/NavMenu";
 import LanguageSwitcher from "../ui/LanguageSwitcher";
 import MobileMenu from "../ui/MobileMenu";
+import SearchC from "../ui/Search";
 
 const Header = async () => {
   const t = await getTranslations("Header");
@@ -67,6 +68,7 @@ const Header = async () => {
           </Link>
           <NavMenu title={t("findProvider")} />
         </div>
+        <SearchC className="max-xl:hidden max-w-[475px]" />
         <div className="right hidden md:flex items-center gap-4">
           <LanguageSwitcher />
           <Link href="/auth/sign-up">

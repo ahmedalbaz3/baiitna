@@ -1,10 +1,10 @@
 "use client";
 import { Menu, X, ChevronRight, Globe, ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { title } from "process";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../shared/Button";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { usePathname } from "next/navigation";
 
 const list = [
   { title: "About Us", href: "/about" },
@@ -18,6 +18,13 @@ const MobileMenu = () => {
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
 
+  const path = usePathname();
+
+  useEffect(() => {
+    setOpen(false);
+    setServicesOpen(false);
+  }, [path]);
+
   return (
     <div className="md:hidden">
       <Menu onClick={() => setOpen(true)} />
@@ -29,7 +36,10 @@ const MobileMenu = () => {
       >
         <div
           className={` absolute top-0 left-0 bg-black opacity-50  h-dvh w-dvw -translate-x-full duration-150 `}
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            setOpen(false);
+            setServicesOpen(false);
+          }}
         ></div>
         <div className="flex flex-col top-0 right-0 bg-white duration-150 h-dvh w-[75dvw] absolute overflow-y-auto">
           <div

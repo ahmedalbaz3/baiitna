@@ -1,47 +1,28 @@
 import { gql } from "@apollo/client/core/index.js";
 
-export const allCategories = gql`
-  query GetAllCategories {
-    Allcategories {
+export const ALL_CATEGORIES = gql`
+  query Allcategories($limit: Int!) {
+    Allcategories(paginate: { limit: $limit }) {
+      code
       success
       message
-      code
       data {
-        # This level is the Pagination object
         items {
-          # This level is the actual Category object
           id
           nameEn
           nameAr
-          code
-          isActive
-          isFeatured
-          numberOfServices
-          readableCreatedAt
-
           image {
             file
-            thumbnail
-            type
           }
-
+          code
           companyServices {
             id
             nameEn
             nameAr
-            slug
+            image {
+              file
+            }
           }
-
-          cities {
-            id
-            name
-            nameAr
-          }
-        }
-        pageInfo {
-          totalCount
-          hasNext
-          page
         }
       }
     }
@@ -89,6 +70,48 @@ export const SEARCH_QUERY = gql`
           nameAr
           slug
         }
+      }
+    }
+  }
+`;
+
+export const SERVICES_QUERY = gql`
+  query GetAllServices($limit: Int!, $page: Int!) {
+    services(paginate: { limit: $limit, page: $page }) {
+      code
+      success
+      message
+      data {
+        items {
+          id
+          nameEn
+          nameAr
+          code
+          slug
+          category {
+            nameEn
+            nameAr
+            id
+          }
+          numberOfCompanies
+        }
+        pageInfo {
+          totalCount
+        }
+      }
+    }
+  }
+`;
+
+export const MOST_SERVICE_QUERY = gql`
+  query GetMostPopularServices {
+    getMostPopularServices {
+      code
+      success
+      message
+      data {
+        serviceId
+        serviceName
       }
     }
   }

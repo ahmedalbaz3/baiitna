@@ -1,6 +1,7 @@
 "use client";
 
 import { citiesSchema } from "@/graphql/queries";
+import { GetCitiesQuery } from "@/types/citiesT";
 import { useQuery } from "@apollo/client/react";
 import { Check, ChevronDown } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -18,7 +19,9 @@ const DropDown = ({ className }: { className?: string }) => {
   }>({ name: "Abu Dhabi", nameAr: "أبو ظبي", id: 1 });
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
-  const [cities, setCities] = useState<Array<any>>([]);
+  const [cities, setCities] = useState<
+    Array<GetCitiesQuery["getCities"]["data"][0]>
+  >([]);
 
   const citiesFetch = useQuery(citiesSchema);
 

@@ -1,16 +1,15 @@
+"use client";
 import { ChevronRight, ChevronLeft, Phone, Mail } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
-const ServiceCard = async ({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) => {
-  const { locale } = await params;
-  const isRtl = locale === "ar";
-  const t = await getTranslations("HomePage.Card");
+const ServiceCard = ({}) => {
+  const params = useParams();
+
+  const isRtl = params.locale === "ar";
+  const t = useTranslations("HomePage.Card");
   return (
     <div className="service-card shadow-xl rounded-xl overflow-hidden bg-white">
       <Link href="/" className="relative block h-[264px] w-full">

@@ -10,7 +10,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useQuery } from "@apollo/client/react";
 
-const HeroSearch = () => {
+const SearchC = ({ className }: { className?: string }) => {
   const params = useParams();
   const { locale } = params;
   const isRtl = locale === "ar";
@@ -56,7 +56,7 @@ const HeroSearch = () => {
   // ============== SEARCH LOGIC ==============
 
   const [resultType, setResultType] = useState<"services" | "providers">(
-    "services"
+    "services",
   );
 
   const [debouncedTerm, setDebouncedTerm] = useState("");
@@ -83,11 +83,39 @@ const HeroSearch = () => {
     }
   }, [data]);
 
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const position = window.pageYOffset;
+      setScrollPosition(position);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const [componentHidden, setComponentHidden] = useState(true);
+  useEffect(() => {
+    if (scrollPosition > 400) {
+      setComponentHidden(false);
+    } else {
+      setComponentHidden(true);
+      setSearchInput("");
+    }
+  }, [scrollPosition]);
+
   return (
-    <div>
+    <div
+      className={`search-component  ${className} ${
+        componentHidden ? "hidden" : ""
+      }`}
+    >
+      {" "}
       <form
         action=""
-        className="flex items-center border rounded-xl bg-cream md:w-2xl relative"
+        className="flex items-center border rounded-xl bg-cream w-full relative "
         onSubmit={(e) => e.preventDefault()}
       >
         <button type="submit" className="p-2">
@@ -115,7 +143,7 @@ const HeroSearch = () => {
               className={`dropdown absolute top-full  mt-3 rounded-2xl bg-white w-60 shadow-lg duration-250 ${
                 isRtl ? "left-0" : "right-0"
               } ${
-                dropdownOpen ? "z-10" : "h-0 overflow-hidden opacity-0 -z-10"
+                dropdownOpen ? "" : "h-0 overflow-hidden hidden"
               } max-h-fit min-h-fit`}
             >
               <ul className="py-3">
@@ -288,40 +316,8 @@ const HeroSearch = () => {
           )}
         </div>
       </form>
-      <div className="mt-6 flex gap-4 items-center justify-center max-md:flex-col ">
-        <p>{t("searchSuggest")}</p>
-        <ul className="flex gap-1.5 md:gap-3 ">
-          {["Interior design", "Bespoke furniture", "Upholstery"].map(
-            (item) => (
-              <li
-                tabIndex={0}
-                key={item}
-                className={` text-xs md:text-sm font-medium border rounded-xl py-1.5 px-3 cursor-pointer ${
-                  selectedCategory === item
-                    ? "bg-black text-white border"
-                    : "bg-cream text-foreground border-border"
-                } whitespace-nowrap`}
-                onClick={(e) => {
-                  setSelectedCategory(e.target.textContent);
-                  setSearchInput(e.target.textContent);
-                  inputRef.current?.focus();
-                }}
-                onKeyDown={(e) => handleEnterKey(e)}
-              >
-                {item}
-              </li>
-            )
-          )}
-        </ul>
-      </div>
-      <div
-        className={` absolute top-0 left-0 z-20 w-full h-full bg-black opacity-0 ${
-          searchInput ? "" : "hidden"
-        }`}
-        onClick={() => setSearchInput("")}
-      ></div>
     </div>
   );
 };
 
-export default HeroSearch;
+export default SearchC;

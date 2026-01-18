@@ -5,13 +5,33 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-const ServiceCard = ({}) => {
+interface ServiceCardProps {
+  title?: string;
+  description?: string;
+  imageUrl?: string;
+  providerLogo?: string;
+  phone?: string;
+  whatsapp?: string;
+  email?: string;
+  profileLink?: string;
+}
+
+const ServiceCard = ({
+  title,
+  description,
+  imageUrl,
+  providerLogo,
+  phone,
+  whatsapp,
+  email,
+  profileLink,
+}: ServiceCardProps) => {
   const params = useParams();
 
   const isRtl = params.locale === "ar";
   const t = useTranslations("HomePage.Card");
   return (
-    <div className="service-card shadow-xl rounded-xl overflow-hidden bg-white">
+    <div className="service-card shadow-xl rounded-xl overflow-hidden bg-white min-h[456px]">
       <Link href="/" className="relative block h-[264px] w-full">
         <Image
           src="/images/service-card-1.jpeg"
@@ -33,10 +53,12 @@ const ServiceCard = ({}) => {
           />
         </div>
         <div className="text space-y-1 pt-7">
-          <h3 className="text-lg font-semibold text-gray-900">
-            Home Smart System
-          </h3>
-          <p className="text-sm text-gray-500">Smarter Living Starts Here.</p>
+          <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+          <p className="text-sm text-gray-500">
+            {description?.length > 40
+              ? description.substring(0, 40) + "..."
+              : description}
+          </p>
         </div>
 
         <div className="bottom flex justify-between items-cente mt-2">

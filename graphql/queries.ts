@@ -116,3 +116,41 @@ export const MOST_SERVICE_QUERY = gql`
     }
   }
 `;
+
+export const PROVIDERS_QUERY = gql`
+  query AllProviders($serviceId: String, $limit: Int!) {
+    allProviders(
+      filter: { serviceId: $serviceId }
+      paginate: { limit: $limit }
+    ) {
+      code
+      success
+      message
+      data {
+        items {
+          id
+          slug
+          businessNameEn
+          businessNameAr
+          aboutEn
+          aboutAr
+          sloganEn
+          sloganAr
+          phones
+          businessPhone
+          whatsapp
+          businessEmail
+          jobTitle
+          code
+
+          logo {
+            file
+          }
+          cover {
+            file
+          }
+        }
+      }
+    }
+  }
+`;

@@ -1,6 +1,5 @@
 "use client";
 import DropDown from "@/components/ui/DropDown";
-import ServiceCard from "@/components/shared/ServiceCard";
 import Button from "@/components/shared/Button";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -10,6 +9,7 @@ import { SERVICES_QUERY } from "@/graphql/queries";
 import { GetAllServicesData } from "@/types/servicesT";
 import { useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Loader } from "lucide-react";
+import ProviderList from "@/components/ui/ProviderList";
 
 const list = ["test"];
 
@@ -21,6 +21,7 @@ const Providers = () => {
   const t = useTranslations("HomePage.Services");
   const { locale } = useParams();
   const isRtl = locale === "ar" ? true : false;
+  const [focusedId, setFocusedId] = useState<string>("");
 
   const scrollBar = useRef<HTMLDivElement>(null);
 
@@ -28,6 +29,7 @@ const Providers = () => {
     const target = e.target as HTMLElement;
     if (target.tagName === "SPAN") {
       console.log(target.id);
+      setFocusedId(target.id);
     }
   };
 
@@ -88,7 +90,7 @@ const Providers = () => {
           {t("title")} <DropDown className="inline-block text-primary" />
         </h2>
 
-        <div className="relative container provider-scroll">
+        <div className="relative container provider-scroll px-0">
           <div
             ref={scrollBar}
             className=" flex gap-6 overflow-x-hidden w-full border-b border-gray-200 min-h-8.5"
@@ -99,7 +101,9 @@ const Providers = () => {
             ) : (
               data?.services.data.items.map((item, i) => (
                 <span
-                  className="whitespace-nowrap text-base font-semibold border-b-2 border-transparent pb-2 hover:border-primary hover:text-primary cursor-pointer"
+                  className={`whitespace-nowrap text-base font-semibold border-b-2 border-transparent pb-2 hover:border-primary hover:text-primary cursor-pointer ${
+                    focusedId === item.id ? "border-primary! text-primary" : ""
+                  }`}
                   key={i}
                   id={item.id}
                 >
@@ -124,12 +128,7 @@ const Providers = () => {
             <ChevronRight />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full">
-          <ServiceCard />
-          <ServiceCard />
-          <ServiceCard />
-          <ServiceCard />
-        </div>
+        <ProviderList serviceId={focusedId} />
         <Link href="/profile-setup" className="self-center mt-10">
           <Button
             text={t("viewAll")}

@@ -4,8 +4,13 @@ import Feature from "@/components/pages/home/Feature";
 import Hero from "@/components/pages/home/Hero";
 import PopularServices from "@/components/pages/home/PopularServices";
 import Providers from "@/components/pages/home/Providers";
-import { ALL_CATEGORIES } from "@/graphql/queries";
-import { getClient } from "@/lib/apollo/server";
+import JsonLd from "@/components/seo/JsonLd";
+
+import {
+  getBreadcrumbSchema,
+  getImageObjectSchema,
+  getWebPageSchema,
+} from "@/lib/schemas/schema";
 import { getTranslations } from "next-intl/server";
 
 export default async function Home({
@@ -15,14 +20,37 @@ export default async function Home({
 }) {
   const t = await getTranslations("HomePage");
 
+  const webPAgeSchema = getWebPageSchema();
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: t("breadcrumb"), url: "https://baiitna.com" },
+  ]);
+  const imageObjectSchema = getImageObjectSchema();
+  const combinedSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      // Use @graph to bundle multiple schemas neatly
+      webPAgeSchema,
+      breadcrumbSchema,
+      imageObjectSchema,
+      {
+        "@type": "WebSite",
+        name: "Baiitna",
+        url: "https://baiitna.com",
+      },
+    ],
+  };
+
   return (
-    <main className="">
-      <Hero />
-      <Feature params={params} />
-      <Categories params={params} />
-      <PopularServices />
-      <Providers />
-      <Ads />
-    </main>
+    <>
+      <JsonLd data={combinedSchema} />
+      <main className="">
+        <Hero />
+        <Feature />
+        <Categories />
+        <PopularServices />
+        <Providers />
+        <Ads />
+      </main>
+    </>
   );
 }

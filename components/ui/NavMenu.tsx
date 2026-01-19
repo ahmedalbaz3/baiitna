@@ -7,12 +7,13 @@ import Image from "next/image";
 import { useQuery } from "@apollo/client/react";
 import { ALL_CATEGORIES } from "@/graphql/queries";
 import { GetAllCategoriesQuery } from "@/types/categoriesT";
+import { useLocale } from "next-intl";
 
 const NavMenu = ({ title }: { title: string }) => {
   const [open, setOpen] = useState(false);
   const [titleHover, setTitleHover] = useState(false);
-  const pathname = usePathname();
-  const isRtl = pathname.split("/")[1] === "ar" ? true : false;
+  const locale = useLocale();
+  const isRtl = locale === "ar" ? true : false;
 
   const { data } = useQuery<GetAllCategoriesQuery>(ALL_CATEGORIES, {
     variables: { limit: 8 },
@@ -52,9 +53,9 @@ const NavMenu = ({ title }: { title: string }) => {
            }`}
       >
         <div className="header">
-          <h3 className="text-2xl font-semibold whitespace-nowrap">
+          <p className="text-2xl font-semibold whitespace-nowrap">
             Provider Categories
-          </h3>
+          </p>
         </div>
         <div className="body grid grid-cols-3 whitespace-nowrap gap-8 py-6">
           {data?.Allcategories.data.items.map((item, index) => (

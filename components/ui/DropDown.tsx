@@ -4,12 +4,11 @@ import { citiesSchema } from "@/graphql/queries";
 import { GetCitiesQuery } from "@/types/citiesT";
 import { useQuery } from "@apollo/client/react";
 import { Check, ChevronDown } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useLocale } from "next-intl";
 import { useEffect, useState } from "react";
 
 const DropDown = ({ className }: { className?: string }) => {
-  const params = useParams();
-  const { locale } = params;
+  const locale = useLocale();
   const isRtl = locale === "ar";
 
   const [selectedPlace, setSelectedPlace] = useState<{

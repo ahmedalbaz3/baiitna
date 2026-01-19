@@ -154,3 +154,39 @@ export const PROVIDERS_QUERY = gql`
     }
   }
 `;
+
+export const GET_FEATURED_BOARD = gql`
+  query FeaturedBoard {
+    featuredBoard {
+      code
+      success
+      message
+      data {
+        categories {
+          id
+          nameEn
+          nameAr
+          isActive
+          code
+          isFeatured
+          image {
+            file
+          }
+        }
+        services {
+          id
+          nameEn
+          nameAr
+          code
+          isFeatured
+          isActive
+          categoryId
+          slug
+          image {
+            file
+          }
+        }
+      }
+    }
+  }
+`;

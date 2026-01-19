@@ -10,6 +10,9 @@ import { ApolloProvider } from "@/components/providers/ApolloProvider";
 import { NextIntlClientProvider } from "next-intl";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { getGlobalSchemas } from "@/lib/schemas/schema";
+import JsonLd from "@/components/seo/JsonLd";
+import { getTranslations } from "next-intl/server";
 
 const notoSans = Noto_Sans({ subsets: ["latin"], weight: ["400", "700"] });
 const notoArabic = Noto_Sans_Arabic({
@@ -27,11 +30,37 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Home - For every beautiful home | baiitna",
-  description:
-    "Discover baiitna platform that connects homeowners with service providers for construction, decor, and maintenance. Find the best quotes and get your service.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const baseUrl = "http://localhost:3000/";
+  const localePath = locale === "en" ? "" : `/${locale}`;
+  const t = await getTranslations("HomePage");
+
+  return {
+    metadataBase: new URL(baseUrl),
+    title: t("title"),
+    description: t("description"),
+    icons: {
+      icon: [{ url: "/icon-dark.svg", type: "image/svg+xml" }],
+    },
+    alternates: {
+      canonical: `${baseUrl}${localePath}`,
+      languages: {
+        en: `${baseUrl}`,
+        ar: `${baseUrl}/ar`,
+      },
+    },
+    robots: {
+      index: true,
+      follow: true,
+      nocache: true,
+    },
+  };
+}
 
 export default async function RootLayout({
   children,
@@ -41,10 +70,14 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }>) {
   const { locale } = (await params) || { locale: "en" };
+  const globalSchema = getGlobalSchemas(locale);
 
   const direction = locale === "ar" ? "rtl" : "ltr";
   return (
     <html lang={locale} dir={direction}>
+      <head>
+        <JsonLd data={globalSchema} />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative`}
       >

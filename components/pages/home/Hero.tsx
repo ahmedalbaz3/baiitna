@@ -1,6 +1,5 @@
-import React from "react";
 import { getTranslations } from "next-intl/server";
-import HeroSearch from "./HeroSearch";
+import SearchC from "@/components/ui/Search";
 
 const Hero = async () => {
   const t = await getTranslations("HomePage.Hero");
@@ -17,7 +16,7 @@ const Hero = async () => {
           </p>
         </div>
         <div className="search mt-12 ">
-          <HeroSearch />
+          <SearchC className="" type="hero" />
         </div>
       </div>
     </section>

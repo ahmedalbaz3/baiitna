@@ -71,7 +71,7 @@
   }
 
   .container {
-    @apply mx-auto flex items-center justify-between px-5 md:px-2;
+    @apply mx-auto flex items-center justify-between px-5 md:px-2 min-lg:max-w-4xl;
   }
 }
 
@@ -92,4 +92,12 @@
 
 .provider-icon {
   @apply absolute  -top-2 size-9 rounded-full  z-20 grid place-items-center bg-accent cursor-pointer opacity-0 hover:opacity-100 duration-200;
+}
+
+.service-card-icons {
+  @apply w-11.5 h-10 xl:w-8.75 xl:h-7.5 2xl:w-11.5 2xl:h-10 rounded-xl border hover:border-white flex items-center justify-center transition-colors hover:bg-black hover:text-white duration-300;
+}
+
+.service-card:hover .profile-link {
+  @apply opacity-100;
 }

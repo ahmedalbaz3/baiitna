@@ -1,6 +1,6 @@
 "use client";
 import { Search, SearchIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState, useEffect, useRef, use } from "react";
 import { ChevronDown } from "lucide-react";
 import { Check } from "lucide-react";
@@ -9,12 +9,18 @@ import { citiesSchema, SEARCH_QUERY } from "@/graphql/queries";
 import Link from "next/link";
 import Image from "next/image";
 import { useQuery } from "@apollo/client/react";
+import { SearchResultsSkeleton } from "./skeletons/SearchResultSkeleton";
 
-const SearchC = ({ className }: { className?: string }) => {
-  const params = useParams();
-  const { locale } = params;
+const SearchC = ({
+  className,
+  type,
+}: {
+  className?: string;
+  type: "hero" | "header";
+}) => {
+  const locale = useLocale();
   const isRtl = locale === "ar";
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const t = useTranslations("HomePage.Hero");
 
   const [selectedPlace, setSelectedPlace] = useState<{
@@ -31,6 +37,7 @@ const SearchC = ({ className }: { className?: string }) => {
   });
   const [cities, setCities] = useState<Array<any>>([]);
 
+  // handle keyboard navigation for suggested categories
   const handleEnterKey = (e: React.KeyboardEvent<HTMLLIElement>) => {
     if (e.key === "Enter") {
       const target = e.target as HTMLLIElement;
@@ -40,6 +47,7 @@ const SearchC = ({ className }: { className?: string }) => {
     }
   };
 
+  // ============== FETCH CITIES ==============
   const citiesFetch = useQuery(citiesSchema);
 
   useEffect(() => {
@@ -96,6 +104,7 @@ const SearchC = ({ className }: { className?: string }) => {
     };
   }, []);
 
+  // hide/show component on scroll
   const [componentHidden, setComponentHidden] = useState(true);
   useEffect(() => {
     if (scrollPosition > 400) {
@@ -109,10 +118,9 @@ const SearchC = ({ className }: { className?: string }) => {
   return (
     <div
       className={`search-component  ${className} ${
-        componentHidden ? "hidden" : ""
+        type === "header" && componentHidden ? "hidden" : ""
       }`}
     >
-      {" "}
       <form
         action=""
         className="flex items-center border rounded-xl bg-cream w-full relative "
@@ -140,10 +148,10 @@ const SearchC = ({ className }: { className?: string }) => {
               <ChevronDown className="inline-block ml-1" />
             </span>
             <div
-              className={`dropdown absolute top-full  mt-3 rounded-2xl bg-white w-60 shadow-lg duration-250 ${
+              className={`dropdown absolute top-full mt-3 rounded-2xl bg-white w-60 shadow-lg duration-250 ${
                 isRtl ? "left-0" : "right-0"
               } ${
-                dropdownOpen ? "" : "h-0 overflow-hidden hidden"
+                dropdownOpen ? "z-20" : "h-0 overflow-hidden hidden"
               } max-h-fit min-h-fit`}
             >
               <ul className="py-3">
@@ -185,7 +193,9 @@ const SearchC = ({ className }: { className?: string }) => {
               : "h-0 opacity-0 pointer-events-none"
           }`}
         >
-          <div className="md:hidden flex items-center text-sm gap-4 px-6  border-b border-b-gray-300 ">
+          <div
+            className={`md:hidden flex items-center text-sm gap-4 px-6  border-b border-b-gray-300 `}
+          >
             <span
               className={`result-card py-3  ${
                 resultType === "services" ? "result-card focused" : ""
@@ -208,8 +218,10 @@ const SearchC = ({ className }: { className?: string }) => {
             </span>
           </div>
 
-          {searchResults.services.length > 0 ||
-          searchResults.providers.length > 0 ? (
+          {loading ? (
+            <SearchResultsSkeleton />
+          ) : searchResults.services.length > 0 ||
+            searchResults.providers.length > 0 ? (
             <div className="grid md:grid-cols-2 h-[450px] ">
               <div
                 className={`col flex flex-col overflow-hidden p-6 h-full max-md:pb-25  ${
@@ -316,6 +328,40 @@ const SearchC = ({ className }: { className?: string }) => {
           )}
         </div>
       </form>
+      <div
+        className={`mt-6 flex gap-4 items-center justify-center max-md:flex-col text-sm ${type === "hero" ? "" : "hidden"}`}
+      >
+        <p>{t("searchSuggest")}</p>
+        <ul className={`flex gap-1.5 md:gap-3 `}>
+          {["Interior design", "Bespoke furniture", "Upholstery"].map(
+            (item) => (
+              <li
+                tabIndex={0}
+                key={item}
+                className={` text-xs  font-semibold border rounded-lg py-1.5 px-3 cursor-pointer ${
+                  selectedCategory === item
+                    ? "bg-black text-white border"
+                    : "bg-transparent text-foreground border-border"
+                } whitespace-nowrap`}
+                onClick={(e) => {
+                  setSelectedCategory(e.target.textContent);
+                  setSearchInput(e.target.textContent);
+                  inputRef.current?.focus();
+                }}
+                onKeyDown={(e) => handleEnterKey(e)}
+              >
+                {item}
+              </li>
+            ),
+          )}
+        </ul>
+      </div>
+      <div
+        className={` absolute top-0 left-0 z-20 w-dvw h-dvh bg-black opacity-0 ${
+          searchInput ? "" : "hidden"
+        }`}
+        onClick={() => setSearchInput("")}
+      ></div>
     </div>
   );
 };

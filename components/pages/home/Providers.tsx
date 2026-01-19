@@ -2,29 +2,26 @@
 import DropDown from "@/components/ui/DropDown";
 import Button from "@/components/shared/Button";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import { useQuery } from "@apollo/client/react";
 import { SERVICES_QUERY } from "@/graphql/queries";
 import { GetAllServicesData } from "@/types/servicesT";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Loader } from "lucide-react";
 import ProviderList from "@/components/ui/ProviderList";
-
-const list = ["test"];
-
-for (let i = 0; i < 50; i++) {
-  list.push(`test-${i++}`);
-}
+import { Skeleton } from "@/components/ui/Skeleton";
 
 const Providers = () => {
   const t = useTranslations("HomePage.Services");
-  const { locale } = useParams();
+  const locale = useLocale();
   const isRtl = locale === "ar" ? true : false;
+
   const [focusedId, setFocusedId] = useState<string>("");
 
   const scrollBar = useRef<HTMLDivElement>(null);
 
+  // handling focus on service
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLElement;
     if (target.tagName === "SPAN") {
@@ -33,6 +30,7 @@ const Providers = () => {
     }
   };
 
+  // get all services
   const { data, loading, error, fetchMore } = useQuery<GetAllServicesData>(
     SERVICES_QUERY,
     {
@@ -40,6 +38,14 @@ const Providers = () => {
     },
   );
 
+  // set first service as focused by default
+  useEffect(() => {
+    if (data && data.services.data.items.length > 0 && !focusedId) {
+      setFocusedId(data.services.data.items[0].id);
+    }
+  }, []);
+
+  // load more services on scroll
   const loadMore = () => {
     let page = 1;
     let limit = 9;
@@ -85,8 +91,8 @@ const Providers = () => {
   };
   return (
     <section className="pb-sm-section-py bg-white ">
-      <div className="container flex flex-col items-start gap-[50px] ">
-        <h2 className="md:text-[38px] text-xl max-w-[60dvw] md:max-w-[550px] font-semibold ">
+      <div className="container flex flex-col items-start gap-[25px] ">
+        <h2 className="md:text-[38px] text-xl max-w-[335px] md:max-w-[550px] font-semibold ">
           {t("title")} <DropDown className="inline-block text-primary" />
         </h2>
 
@@ -97,7 +103,14 @@ const Providers = () => {
             onClick={(e) => handleClick(e)}
           >
             {loading && !data ? (
-              <Loader className="animate-spin mx-auto" />
+              <>
+                {[1, 2, 3, 4, 5, 6, 7, 8 ].map((_, i) => (
+                  <Skeleton
+                    key={i}
+                    className="h-6 w-[calc(100vw/8)] min-w-[80px] mr-4"
+                  />
+                ))}
+              </>
             ) : (
               data?.services.data.items.map((item, i) => (
                 <span

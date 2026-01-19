@@ -6,6 +6,9 @@
       "searchPlaceholder": "Search for services or companies",
       "searchSuggest": "Try searching for a"
     },
+    "breadcrumb": "Home",
+    "title": "Home - All the services you need for your property | baiitna",
+    "description": "Discover baiitna platform that connects homeowners with service providers for construction, decor, and maintenance. Find the best quotes and get your service.",
     "Feature": {
       "title": "Achieve your home improvement needs in only three steps",
       "step1": "Choose your service",
@@ -36,7 +39,9 @@
     "join": "Join as a provider",
     "login": "Login",
     "signup": "Sign Up",
-    "lang": "العربية"
+    "lang": "العربية",
+    "logoTitle": "baiitna",
+    "logoAlt": "Baiitna Logo"
   },
   "Footer": {
     "description": "baiitna, making it simple to find the right experts in your city.",

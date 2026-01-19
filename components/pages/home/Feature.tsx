@@ -1,9 +1,9 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Image from "next/image";
 
-const Feature = async ({ params }: { params: Promise<{ locale: string }> }) => {
+const Feature = async () => {
   const t = await getTranslations("HomePage.Feature");
-  const { locale } = await params;
+  const locale = await getLocale();
   const direction = locale === "ar" ? "rtl" : "ltr";
 
   const steps = [

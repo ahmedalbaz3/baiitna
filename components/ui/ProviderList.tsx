@@ -12,6 +12,8 @@ const ProviderList = ({ serviceId }: { serviceId: string }) => {
     variables: { serviceId: serviceId, limit: 4 },
   });
 
+  console.log(data);
+
   return (
     <div className={`min-h-[456px] w-full mx-auto `}>
       {loading && (
@@ -47,8 +49,8 @@ const ProviderList = ({ serviceId }: { serviceId: string }) => {
             descriptionEn={provider.sloganEn}
             descriptionAr={provider.sloganAr}
             imageUrl={
-              provider.media && provider.media.length > 0
-                ? provider.media[0].file
+              provider.cover
+                ? provider.cover.file
                 : "/images/service-card-1.jpeg"
             }
             providerLogo={

@@ -4,7 +4,15 @@
       "title": "Find property service providers in your city",
       "description": "Search by service and city to connect with trusted companies near you. View their work and get in touch — quick, easy, and reliable.",
       "searchPlaceholder": "Search for services or companies",
-      "searchSuggest": "Try searching for a"
+      "searchSuggest": "Try searching for a",
+      "searchButton": "Search",
+      "search": {
+        "service": "Services",
+        "results": "Results in",
+        "noResults": "No search results for",
+        "city": "city",
+        "provider": "Providers"
+      }
     },
     "breadcrumb": "Home",
     "title": "Home - All the services you need for your property | baiitna",

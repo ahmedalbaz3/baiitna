@@ -4,7 +4,6 @@ import { useLocale, useTranslations } from "next-intl";
 import { useState, useEffect, useRef, use } from "react";
 import { ChevronDown } from "lucide-react";
 import { Check } from "lucide-react";
-import { useParams } from "next/navigation";
 import { citiesSchema, SEARCH_QUERY } from "@/graphql/queries";
 import Link from "next/link";
 import Image from "next/image";
@@ -128,6 +127,7 @@ const SearchC = ({
       >
         <button type="submit" className="p-2">
           <Search width={20} height={20} />
+          <span className="sr-only">{t("searchButton")}</span>
         </button>
         <input
           ref={inputRef}
@@ -230,17 +230,17 @@ const SearchC = ({
               >
                 <div className="title ">
                   <h3 className="text-start text-xl font-bold max-md:hidden">
-                    Services
+                    {t("search.service")}
                   </h3>
                   <div className="flex gap-1 mt-2 text-sm">
                     <span className="text-primary font-semibold">
                       {searchResults.services.length}
                     </span>
-                    <p>Results in services</p>
+                    <p>{t("search.results") + " " + t("search.service")}</p>
                   </div>
                 </div>
                 <div
-                  className={`results flex-1 mt-6 overflow-y-auto flex flex-col gap-4 pr-2 custom-scrollbar `}
+                  className={`results flex-1 mt-6 overflow-y-auto flex flex-col gap-4  custom-scrollbar `}
                 >
                   {searchResults.services.length > 0 ? (
                     searchResults.services.map((service) => (
@@ -249,8 +249,8 @@ const SearchC = ({
                         href={`/services/${service.slug}`}
                         className="text-sm flex items-center hover:text-primary shrink-0"
                       >
-                        <SearchIcon width={16} height={16} className="mr-1.5" />
-                        <span>{service.nameEn}</span>
+                        <SearchIcon width={16} height={16} className="me-1.5" />
+                        <span>{isRtl ? service.nameAr : service.nameEn}</span>
                       </Link>
                     ))
                   ) : (
@@ -263,7 +263,7 @@ const SearchC = ({
                         className="mx-auto h-auto"
                       />
                       <p className="text-xs mt-4">
-                        No search results for "{searchInput}"
+                        {t("search.noResults")} "{searchInput}"
                       </p>
                     </div>
                   )}
@@ -277,18 +277,18 @@ const SearchC = ({
               >
                 <div className="title ">
                   <h3 className="text-start text-xl font-bold max-md:hidden">
-                    Providers
+                    {t("search.provider")}
                   </h3>
                   <div className="flex gap-1 mt-2 text-sm">
                     <span className="text-primary font-semibold">
                       {searchResults.providers.length}
                     </span>
-                    <p>Results in providers</p>
+                    <p>{t("search.results") + " " + t("search.provider")}</p>
                   </div>
                 </div>
 
                 <div
-                  className={`results flex-1 mt-6 overflow-y-auto flex flex-col gap-4 pr-2 custom-scrollbar  `}
+                  className={`results flex-1 mt-6 overflow-y-auto flex flex-col gap-4  custom-scrollbar  `}
                 >
                   {searchResults.providers.map((provider) => (
                     <Link
@@ -302,11 +302,15 @@ const SearchC = ({
                           width={30}
                           height={30}
                           className="object-cover"
-                          alt={provider.nameEn}
+                          alt={
+                            isRtl ? provider.nameAr + " صورة" : provider.nameEn
+                          }
                           loading="lazy"
                         />
                       </div>
-                      <span className="truncate">{provider.nameEn}</span>
+                      <span className="truncate">
+                        {isRtl ? provider.nameAr : provider.nameEn}
+                      </span>
                     </Link>
                   ))}
                 </div>

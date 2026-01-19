@@ -28,6 +28,7 @@ const Header = async () => {
               height={50}
               className="w-full h-auto"
             />
+            <span className="sr-only">Baiitna Logo</span>
           </Link>
           <NavMenu title={t("findProvider")} />
         </div>

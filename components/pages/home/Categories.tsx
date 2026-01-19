@@ -27,13 +27,15 @@ const Categories = async () => {
               className="flex flex-col items-center justify-between gap-3  mb-2  me-2 py-[30] px-6 bg-background hover:text-primary text-center rounded-2xl"
             >
               <div className="image relative rounded-lg overflow-hidden w-[38px] h-[38px] md:w-[56px] md:h-[56px]">
-                <Image
-                  src={`https://staging-api.baiitna.com/${category.image.file}`}
-                  alt={isRtl ? category.nameAr : category.nameEn}
-                  fill // Tells the image to fill the parent container
-                  sizes="(max-width: 768px) 36px, 56px" // Helps the browser choose the right resolution
-                  className="object-cover" // Ensures the image fills the area without stretching
-                />
+                <div className="relative w-full h-full overflow-hidden bg-[#f6f7f8] animate-shimmer">
+                  <Image
+                    src={`https://staging-api.baiitna.com/${category.image.file}`}
+                    alt={isRtl ? category.nameAr : category.nameEn}
+                    fill
+                    sizes="(max-width: 768px) 36px, 56px"
+                    className="object-cover"
+                  />
+                </div>
               </div>
               <span className="hover:text-primary text-center font-medium text-sm md:text-base">
                 {isRtl ? category.nameAr : category.nameEn}

@@ -130,6 +130,7 @@ const Footer = async () => {
                   fill="white"
                 ></path>
               </svg>
+              <span className="sr-only">IOS application</span>
             </Link>
             <Link
               href="https://play.google.com/store/apps/details?id=com.baiitnaapp"
@@ -284,6 +285,7 @@ const Footer = async () => {
                   </linearGradient>
                 </defs>
               </svg>
+              <span className="sr-only">Android application</span>
             </Link>
           </div>
           <p className="mt-6">{t("description")}</p>

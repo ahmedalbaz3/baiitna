@@ -25,13 +25,15 @@ const PopularServices = async () => {
               key={service.id}
               className="image rounded-2xl overflow-hidden relative h-[270px] w-full cursor-pointer"
             >
-              <Image
-                src="/images/services-1.png"
-                alt={isRtl ? service.nameAr : service.nameEn}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 33vw"
-              />
+              <div className="relative w-full h-full overflow-hidden rounded-2xl bg-[#f6f7f8] animate-shimmer">
+                <Image
+                  src={`https://staging-api.baiitna.com/${service.image.file}`}
+                  alt={isRtl ? service.nameAr : service.nameEn}
+                  fill
+                  className="object-cover" // No opacity-0 here
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+              </div>
               <div className="relative w-full h-[60%] top-[40%] bg-cover bg-center bg-[linear-gradient(to_top,rgba(0,0,0,0.6)_0%,rgba(255,255,255,0)_40%)]"></div>
               <p className="absolute bottom-0 p-4 text-white font-semibold text-base">
                 {isRtl ? service.nameAr : service.nameEn}

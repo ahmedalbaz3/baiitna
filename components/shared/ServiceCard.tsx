@@ -2,9 +2,7 @@
 import { ChevronRight, ChevronLeft, Phone, Mail } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { getLocale } from "next-intl/server";
 
 interface ServiceCardProps {
   titleEn: string;
@@ -38,24 +36,28 @@ const ServiceCard = ({
   return (
     <div className="service-card flex flex-col shadow-md rounded-xl overflow-hidden bg-white min-h[456px]">
       <Link href="/" className="relative block h-[264px] w-full">
-        <Image
-          src="/images/service-card-1.jpeg"
-          alt="Home Smart System"
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, 360px"
-        />
+        <div className="relative w-full h-full overflow-hidden bg-[#f6f7f8] animate-shimmer">
+          <Image
+            src={`https://staging-api.baiitna.com/${imageUrl}`}
+            alt="Home Smart System"
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 360px"
+          />
+        </div>
       </Link>
 
       <div className="desc flex flex-col justify-between flex-1 p-4 pb-0 relative">
-        <div className=" absolute top-[-30px] left-4 border-2 border-background rounded-2xl overflow-hidden">
-          <Image
-            src="/images/provider-logo.png"
-            alt="Service Provider"
-            width={60}
-            height={60}
-            className="rounded-lg"
-          />
+        <div className=" absolute top-[-30px] left-4 border-2 border-background rounded-2xl overflow-hidden size-[60px]">
+          <div className="relative w-full h-full overflow-hidden bg-[#f6f7f8] animate-shimmer">
+            <Image
+              src={`https://staging-api.baiitna.com/${providerLogo}`}
+              alt="Service Provider"
+              width={60}
+              height={60}
+              className="rounded-lg object-cover"
+            />
+          </div>
         </div>
         <div className="text space-y-1 pt-7">
           <h3 className="text-lg font-semibold text-gray-900">
@@ -77,6 +79,7 @@ const ServiceCard = ({
             <li className="service-card-icons">
               <Link href="tel:+1234567890">
                 <Phone />
+                <span className="sr-only">phone</span>
               </Link>
             </li>
             <li className="service-card-icons">
@@ -91,11 +94,13 @@ const ServiceCard = ({
                   width={24}
                   height={24}
                 />
+                <span className="sr-only">whatsapp</span>
               </Link>
             </li>
             <li className="service-card-icons">
               <Link href="mailto:example@example.com">
                 <Mail />
+                <span className="sr-only">email</span>
               </Link>
             </li>
           </ul>

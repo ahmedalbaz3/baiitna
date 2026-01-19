@@ -91,7 +91,7 @@
 }
 
 .provider-icon {
-  @apply absolute  -top-2 size-9 rounded-full  z-20 grid place-items-center bg-accent cursor-pointer opacity-0 hover:opacity-100 duration-200;
+  @apply absolute  -top-2 size-9 rounded-full  z-20 grid place-items-center bg-white shadow-2xl cursor-pointer opacity-0 hover:opacity-100 duration-200;
 }
 
 .service-card-icons {
@@ -100,4 +100,20 @@
 
 .service-card:hover .profile-link {
   @apply opacity-100;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  /* Using your background color as the base */
+  background: linear-gradient(90deg, #f5f1ea 25%, #faf8f5 50%, #f5f1ea 75%);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite linear;
 }

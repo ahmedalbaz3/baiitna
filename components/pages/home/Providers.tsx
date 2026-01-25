@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Loader } from "lucide-react";
 import ProviderList from "@/components/ui/ProviderList";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { useFilterStore } from "@/store/useFilter";
 
 const Providers = () => {
   const t = useTranslations("HomePage.Services");
@@ -25,7 +26,6 @@ const Providers = () => {
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLElement;
     if (target.tagName === "SPAN") {
-      console.log(target.id);
       setFocusedId(target.id);
     }
   };
@@ -38,12 +38,17 @@ const Providers = () => {
     },
   );
 
-  // set first service as focused by default
+  const { category } = useFilterStore((state) => state);
+
+  // useEffect(() => {
+  //   console.log("Selected category:", category);
+  // }, [category]);
+
   useEffect(() => {
-    if (data && data.services.data.items.length > 0 && !focusedId) {
+    if (!loading && data?.services?.data?.items?.length > 0 && !focusedId) {
       setFocusedId(data.services.data.items[0].id);
     }
-  }, []);
+  }, [data, loading]);
 
   // load more services on scroll
   const loadMore = () => {

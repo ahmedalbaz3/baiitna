@@ -7,11 +7,11 @@
       "searchSuggest": "جرّب البحث عن",
       "searchButton": "بحث",
       "search": {
-        "service": "خدمات",
+        "service": "الخدمات",
         "results": "نتائج في",
         "noResults": "لا توجد نتائج بحث عن",
         "city": "مدينة",
-        "provider": "مزودين"
+        "provider": "المزودين"
       }
     },
     "breadcrumb": "الرئيسية",
@@ -49,7 +49,21 @@
     "signup": "إنشاء حساب",
     "lang": "English",
     "logoTitle": "بيتنا",
-    "logoAlt": "بيتنا شعار"
+    "logoAlt": "بيتنا شعار",
+    "requestQuote": "طلب عرض أسعار",
+    "navDropDown": {
+      "title": "أنواع الخدمات",
+      "viewProviders": "عرض جميع الشركات",
+      "viewCategories": "عرض جميع الخدمات"
+    },
+    "userMenu": {
+      "settings": "الإعدادات",
+      "ticket": "تذكرة الدعم",
+      "logout": "تسجيل الخروج",
+      "about": "من نحن",
+      "faq": "الأسئلة الشائعة",
+      "quote": "طلبات عروض الأسعار الخاصة بي"
+    }
   },
   "Footer": {
     "description": " مع بيتنا، اعثر على الخبراء المناسبين في مدينتك بسهولة.",
@@ -89,5 +103,24 @@
       "passwordNumber": "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل.",
       "passwordSpecial": "يجب أن تحتوي كلمة المرور على حرف خاص واحد على الأقل (@$!%*?&)."
     }
+  },
+  "MobileMenu": {
+    "about": "عنا",
+    "business": "بيتنا للأعمال",
+    "blog": "المدونة",
+    "contact": "اتصل بنا",
+    "faq": "الأسئلة الشائعة",
+    "login": "تسجيل الدخول",
+    "signup": "إنشاء حساب",
+    "language": "اللغة",
+    "join": "انضم كمزود",
+    "services": "الخدمات",
+    "favorites": "قائمة المفضلات",
+    "quotes": "طلبات عروض الأسعار",
+    "notifications": "الإشعارات",
+    "settings": "الإعدادات",
+    "support": "تذاكر الدعم",
+    "logout": "تسجيل الخروج",
+    "showAllServices": "عرض جميع الخدمات"
   }
 }

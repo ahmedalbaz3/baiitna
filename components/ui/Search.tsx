@@ -1,7 +1,7 @@
 "use client";
 import { Search, SearchIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useState, useEffect, useRef, use } from "react";
+import { useState, useEffect, useRef, use, useMemo } from "react";
 import { ChevronDown } from "lucide-react";
 import { Check } from "lucide-react";
 import { citiesSchema, SEARCH_QUERY } from "@/graphql/queries";
@@ -9,6 +9,39 @@ import Link from "next/link";
 import Image from "next/image";
 import { useQuery } from "@apollo/client/react";
 import { SearchResultsSkeleton } from "./skeletons/SearchResultSkeleton";
+import { useFilterStore } from "@/store/useFilter";
+import { gql } from "@apollo/client";
+import { GetCitiesQuery } from "@/types/citiesT";
+import { SuggestItemsResponse } from "@/types/suggestedServices";
+import { SearchResponse } from "@/types/SearchRequest";
+import { Skeleton } from "./Skeleton";
+
+const suggestItems = gql`
+  query Services {
+    services(paginate: { limit: 3, page: 1 }) {
+      code
+      success
+      message
+      data {
+        items {
+          id
+          nameEn
+          nameAr
+          code
+          isFeatured
+          isActive
+          numberOfCompanies
+          categoryId
+          clicks
+          slug
+          createdAt
+          updatedAt
+          getClickCount
+        }
+      }
+    }
+  }
+`;
 
 const SearchC = ({
   className,
@@ -17,24 +50,29 @@ const SearchC = ({
   className?: string;
   type: "hero" | "header";
 }) => {
+  // language and translation
   const locale = useLocale();
   const isRtl = locale === "ar";
-  const inputRef = useRef<HTMLInputElement | null>(null);
   const t = useTranslations("HomePage.Hero");
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [selectedPlace, setSelectedPlace] = useState<{
     name: string;
     nameAr: string;
     id: number;
   }>({ name: "Abu Dhabi", nameAr: "أبو ظبي", id: 1 });
+
+  //  ui states
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [searchInput, setSearchInput] = useState<string>("");
-  const [searchResults, setSearchResults] = useState<{}>({
-    services: [],
-    providers: [],
-  });
-  const [cities, setCities] = useState<Array<any>>([]);
+  const [resultType, setResultType] = useState<"services" | "providers">(
+    "services",
+  );
+  const [debouncedTerm, setDebouncedTerm] = useState("");
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+
+  const { place, setPlace } = useFilterStore((state) => state);
 
   // handle keyboard navigation for suggested categories
   const handleEnterKey = (e: React.KeyboardEvent<HTMLLIElement>) => {
@@ -46,79 +84,63 @@ const SearchC = ({
     }
   };
 
-  // ============== FETCH CITIES ==============
-  const citiesFetch = useQuery(citiesSchema);
-
-  useEffect(() => {
-    if (citiesFetch.data && citiesFetch.data.getCities) {
-      setCities(citiesFetch.data.getCities.data);
-      setSelectedPlace({
-        name: citiesFetch.data.getCities.data[0].name,
-        nameAr: citiesFetch.data.getCities.data[0].nameAr,
-        id: citiesFetch.data.getCities.data[0].id,
-      });
-    }
-  }, [citiesFetch.data]);
+  // ============== FETCH ==============
+  const { data: citiesFetch } = useQuery<GetCitiesQuery>(citiesSchema);
+  const { data: suggestedServices, loading: suggestedServicesLoading } =
+    useQuery<SuggestItemsResponse>(suggestItems);
+  // fetch search results
+  const {
+    data: searchData,
+    loading,
+    error,
+  } = useQuery<SearchResponse>(SEARCH_QUERY, {
+    variables: {
+      searchKey: debouncedTerm,
+      limit: 10.0,
+      cityId: place.id,
+    },
+    skip: !debouncedTerm,
+  });
 
   // ============== SEARCH LOGIC ==============
 
-  const [resultType, setResultType] = useState<"services" | "providers">(
-    "services",
-  );
-
-  const [debouncedTerm, setDebouncedTerm] = useState("");
   // debouncing  logic
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedTerm(searchInput), 400);
     return () => clearTimeout(timer);
   }, [searchInput]);
 
-  const { data, loading, error } = useQuery(SEARCH_QUERY, {
-    variables: {
-      searchKey: debouncedTerm,
-      limit: 10.0,
-      cityId: selectedPlace.id,
-    },
-  });
-
+  // track scroll position
   useEffect(() => {
-    if (data && data.search) {
-      setSearchResults({
-        services: data.search.data.services,
-        providers: data.search.data.providers,
-      });
-    }
-  }, [data]);
-
-  const [scrollPosition, setScrollPosition] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const position = window.pageYOffset;
-      setScrollPosition(position);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 400);
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // hide/show component on scroll
-  const [componentHidden, setComponentHidden] = useState(true);
-  useEffect(() => {
-    if (scrollPosition > 400) {
-      setComponentHidden(false);
-    } else {
-      setComponentHidden(true);
-    }
-  }, [scrollPosition]);
+  const handleSelectCity = (place: {
+    name: string;
+    nameAr: string;
+    id: number;
+  }) => {
+    setSelectedPlace(place);
+    setPlace(place);
+    setDropdownOpen(false);
+  };
 
+  const cities = citiesFetch?.getCities?.data || [];
+  const services = searchData?.search?.data?.services || [];
+  const providers = searchData?.search?.data?.providers || [];
+  const searchSuggestions = useMemo(() => {
+    return (
+      suggestedServices?.services?.data?.items?.map((item: any) =>
+        isRtl ? item.nameAr : item.nameEn,
+      ) || []
+    );
+  }, [suggestedServices, isRtl]);
+
+  if (type === "header" && !isScrolled) return null;
   return (
-    <div
-      className={`search-component  ${className} ${
-        type === "header" && componentHidden ? "hidden" : ""
-      }`}
-    >
+    <div className={`search-component  ${className} `}>
       <form
         action=""
         className="flex items-center border rounded-xl bg-cream w-full relative "
@@ -143,7 +165,7 @@ const SearchC = ({
           <span>|</span>
           <div className="" onClick={() => setDropdownOpen(!dropdownOpen)}>
             <span className="text-xs md:text-sm p-2 cursor-pointer font-medium">
-              {isRtl ? selectedPlace.nameAr : selectedPlace.name}
+              {isRtl ? place.nameAr : place.name}
               <ChevronDown className="inline-block ml-1" />
             </span>
             <div
@@ -154,30 +176,19 @@ const SearchC = ({
               } max-h-fit min-h-fit`}
             >
               <ul className="py-3">
-                {cities.map((place) => (
+                {cities.map((item) => (
                   <li
                     tabIndex={0}
-                    key={place.id}
-                    onClick={() =>
-                      setSelectedPlace({
-                        name: place.name,
-                        nameAr: place.nameAr,
-                        id: place.id,
-                      })
-                    }
+                    key={item.id}
+                    onClick={() => handleSelectCity(item)}
                     className="text-xs md:text-sm py-3 px-6 hover:text-primary cursor-pointer flex items-center justify-between gap-2 whitespace-nowrap"
-                    onFocus={() =>
-                      setSelectedPlace({
-                        name: place.name,
-                        nameAr: place.nameAr,
-                        id: place.id,
-                      })
-                    }
+                    onFocus={() => handleSelectCity(item)}
                   >
-                    {isRtl ? place.nameAr : place.name}
+                    {isRtl ? item.nameAr : item.name}
                     <span className="text-primary">
-                      {selectedPlace ===
-                        (isRtl ? place.nameAr : place.name) && <Check />}
+                      {place.name === (isRtl ? item.nameAr : item.name) && (
+                        <Check />
+                      )}
                     </span>
                   </li>
                 ))}
@@ -186,7 +197,7 @@ const SearchC = ({
           </div>
         </div>
         <div
-          className={`search-screen absolute top-full left-1/2 -translate-x-1/2 xl:translate-x-0 xl:left-auto xl:right-0 mt-3 duration-300 shadow-2xl z-30 rounded-2xl bg-white w-4xl max-w-[96vw]  overflow-hidden  ${
+          className={`search-screen absolute top-full left-1/2 -translate-x-1/2 xl:translate-x-0 xl:left-auto xl:right-0 mt-3 duration-300 shadow-2xl z-30 rounded-2xl bg-white w-4xl max-w-[96vw] overflow-hidden  ${
             searchInput ? "opacity-100 " : "h-0 opacity-0 pointer-events-none"
           }`}
         >
@@ -201,7 +212,7 @@ const SearchC = ({
                 resultType !== "services" ? setResultType("services") : null
               }
             >
-              Services
+              {t("search.service")}
             </span>
             <span
               className={`result-card  ${
@@ -211,55 +222,53 @@ const SearchC = ({
                 resultType !== "providers" ? setResultType("providers") : null
               }
             >
-              Providers
+              {t("search.provider")}
             </span>
           </div>
 
           {loading ? (
             <SearchResultsSkeleton />
-          ) : searchResults.services.length > 0 ||
-            searchResults.providers.length > 0 ? (
-            <div className="grid md:grid-cols-2 h-[450px] ">
+          ) : services.length > 0 || providers.length > 0 ? (
+            <div className="grid md:grid-cols-2 h-[408px] overflow-hidden border border-gray-100 rounded-xl bg-white shadow-sm">
               <div
-                className={`col flex flex-col overflow-hidden p-6 h-full max-md:pb-25  ${
+                className={`col flex flex-col p-6 h-full min-h-0 border-e border-gray-50 ${
                   resultType === "services" ? "" : "max-md:hidden"
                 }`}
               >
-                <div className="title ">
+                <div className="title shrink-0">
                   <h3 className="text-start text-xl font-bold max-md:hidden">
                     {t("search.service")}
                   </h3>
                   <div className="flex gap-1 mt-2 text-sm">
                     <span className="text-primary font-semibold">
-                      {searchResults.services.length}
+                      {services.length}
                     </span>
                     <p>{t("search.results") + " " + t("search.service")}</p>
                   </div>
                 </div>
-                <div
-                  className={`results flex-1 mt-6 overflow-y-auto flex flex-col gap-4  custom-scrollbar `}
-                >
-                  {searchResults.services.length > 0 ? (
-                    searchResults.services.map((service) => (
+
+                <div className="results flex-1 mt-6 overflow-y-auto flex flex-col gap-4 custom-scrollbar">
+                  {services.length > 0 ? (
+                    services.map((service: any) => (
                       <Link
                         key={service.id}
                         href={`/services/${service.slug}`}
-                        className="text-sm flex items-center hover:text-primary shrink-0"
+                        className="text-sm flex items-center hover:text-primary shrink-0 transition-colors"
                       >
-                        <SearchIcon width={16} height={16} className="me-1.5" />
+                        <SearchIcon size={16} className="me-1.5" />
                         <span>{isRtl ? service.nameAr : service.nameEn}</span>
                       </Link>
                     ))
                   ) : (
-                    <div className="p-10 text-center">
+                    <div className="py-10 text-center flex flex-col items-center justify-center">
                       <Image
                         src="/images/search-404.svg"
                         width={100}
                         height={80}
                         alt="no results"
-                        className="mx-auto h-auto"
+                        className="mx-auto h-auto opacity-60"
                       />
-                      <p className="text-xs mt-4">
+                      <p className="text-xs mt-4 text-gray-500">
                         {t("search.noResults")} "{searchInput}"
                       </p>
                     </div>
@@ -268,48 +277,56 @@ const SearchC = ({
               </div>
 
               <div
-                className={`col flex flex-col overflow-hidden p-6 h-full max-md:pb-25  ${
+                className={`col flex flex-col p-6 h-full min-h-0 ${
                   resultType === "providers" ? "" : "max-md:hidden"
                 }`}
               >
-                <div className="title ">
+                <div className="title shrink-0">
                   <h3 className="text-start text-xl font-bold max-md:hidden">
                     {t("search.provider")}
                   </h3>
                   <div className="flex gap-1 mt-2 text-sm">
                     <span className="text-primary font-semibold">
-                      {searchResults.providers.length}
+                      {providers.length}
                     </span>
                     <p>{t("search.results") + " " + t("search.provider")}</p>
                   </div>
                 </div>
 
-                <div
-                  className={`results flex-1 mt-6 overflow-y-auto flex flex-col gap-4  custom-scrollbar  `}
-                >
-                  {searchResults.providers.map((provider) => (
-                    <Link
-                      key={provider.id}
-                      href={`/companies/${provider.slug.slice(19)}`}
-                      className="text-sm flex items-center hover:text-primary gap-3 shrink-0"
-                    >
-                      <div className="border border-gray-200 rounded-md overflow-hidden shrink-0">
-                        <Image
-                          src={"/images/test-provider.png"}
-                          width={30}
-                          height={30}
-                          className="object-cover"
-                          alt={
-                            isRtl ? provider.nameAr + " صورة" : provider.nameEn
-                          }
-                          loading="lazy"
-                        />
-                      </div>
-                      <span className="truncate">
-                        {isRtl ? provider.nameAr : provider.nameEn}
-                      </span>
-                    </Link>
-                  ))}
+                <div className="results flex-1 mt-6 overflow-y-auto flex flex-col gap-4 custom-scrollbar">
+                  {providers.length > 0 ? (
+                    providers.map((provider: any) => (
+                      <Link
+                        key={provider.id}
+                        href={`/companies/${provider.slug.slice(19)}`}
+                        className="text-sm flex items-center hover:text-primary gap-3 shrink-0 group transition-colors"
+                      >
+                        <div className="border border-gray-200 rounded-md overflow-hidden shrink-0 group-hover:border-primary transition-colors">
+                          <Image
+                            src={"/images/test-provider.png"}
+                            width={32}
+                            height={32}
+                            className="object-cover"
+                            alt={
+                              isRtl
+                                ? provider.nameAr || "شعار المزود"
+                                : provider.nameEn || "Provider Logo"
+                            }
+                            loading="lazy"
+                          />
+                        </div>
+                        <span className="truncate">
+                          {isRtl ? provider.nameAr : provider.nameEn}
+                        </span>
+                      </Link>
+                    ))
+                  ) : (
+                    <div className="py-10 text-center flex flex-col items-center justify-center">
+                      <p className="text-xs text-gray-400 italic">
+                        No providers found
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -334,27 +351,29 @@ const SearchC = ({
       >
         <p>{t("searchSuggest")}</p>
         <ul className={`flex gap-1.5 md:gap-3 `}>
-          {["Interior design", "Bespoke furniture", "Upholstery"].map(
-            (item) => (
-              <li
-                tabIndex={0}
-                key={item}
-                className={` text-xs  font-semibold border rounded-lg py-1.5 px-3 cursor-pointer ${
-                  selectedCategory === item
-                    ? "bg-black text-white border"
-                    : "bg-transparent text-foreground border-border"
-                } whitespace-nowrap`}
-                onClick={(e) => {
-                  setSelectedCategory(e.target.textContent);
-                  setSearchInput(e.target.textContent);
-                  inputRef.current?.focus();
-                }}
-                onKeyDown={(e) => handleEnterKey(e)}
-              >
-                {item}
-              </li>
-            ),
-          )}
+          {suggestedServicesLoading
+            ? [1, 2, 3].map((el) => (
+                <Skeleton key={el} className="w-23 h-6 rounded-lg" />
+              ))
+            : searchSuggestions.map((item) => (
+                <li
+                  tabIndex={0}
+                  key={item}
+                  className={` text-xs  font-semibold border rounded-lg py-1.5 max-md:px-1 px-3 cursor-pointer ${
+                    selectedCategory === item
+                      ? "bg-black text-white border"
+                      : "bg-transparent text-foreground border-border"
+                  } whitespace-nowrap`}
+                  onClick={(e) => {
+                    setSelectedCategory(item);
+                    setSearchInput(item);
+                    inputRef.current?.focus();
+                  }}
+                  onKeyDown={(e) => handleEnterKey(e)}
+                >
+                  {item}
+                </li>
+              ))}
         </ul>
       </div>
       <div

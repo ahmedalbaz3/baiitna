@@ -6,10 +6,13 @@ import { AllProvidersData } from "@/types/providers";
 import { Loader } from "lucide-react";
 import Image from "next/image";
 import ProviderCardSkeleton from "./skeletons/ProviderCardSkeleton";
+import { useFilterStore } from "@/store/useFilter";
 
 const ProviderList = ({ serviceId }: { serviceId: string }) => {
+  const { place, setPlace } = useFilterStore((state) => state);
+
   const { data, loading, error } = useQuery<AllProvidersData>(PROVIDERS_QUERY, {
-    variables: { serviceId: serviceId, limit: 4 },
+    variables: { serviceId: serviceId, limit: 4, cityName: place.name },
   });
 
   return (

@@ -7,9 +7,10 @@ import Image from "next/image";
 import { useQuery } from "@apollo/client/react";
 import { ALL_CATEGORIES } from "@/graphql/queries";
 import { GetAllCategoriesQuery } from "@/types/categoriesT";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 const NavMenu = ({ title }: { title: string }) => {
+  const t = useTranslations("Header.navDropDown");
   const [open, setOpen] = useState(false);
   const [titleHover, setTitleHover] = useState(false);
   const locale = useLocale();
@@ -54,7 +55,7 @@ const NavMenu = ({ title }: { title: string }) => {
       >
         <div className="header">
           <p className="text-2xl font-semibold whitespace-nowrap">
-            Provider Categories
+            {t("title")}
           </p>
         </div>
         <div className="body grid grid-cols-3 whitespace-nowrap gap-8 py-6">
@@ -68,13 +69,13 @@ const NavMenu = ({ title }: { title: string }) => {
                     width={30}
                     height={24}
                   />
-                  {item.nameEn}
+                  {isRtl ? item.nameAr : item.nameEn}
                 </strong>
                 <ul className="flex flex-col gap-1 text-sm">
                   {item.companyServices.map((service) => (
                     <li key={service.id}>
                       <Link href="/" className="hover:text-primary">
-                        {service.nameEn}
+                        {isRtl ? service.nameAr : service.nameEn}
                       </Link>
                     </li>
                   ))}
@@ -88,7 +89,7 @@ const NavMenu = ({ title }: { title: string }) => {
             href="/"
             className="text-primary font-semibold underline flex gap-1 text-sm"
           >
-            <span>Explore all categories</span>
+            <span>{t("viewCategories")}</span>
             {isRtl ? (
               <ChevronLeft width={20} height={20} />
             ) : (
@@ -99,7 +100,7 @@ const NavMenu = ({ title }: { title: string }) => {
             href="/"
             className="text-primary font-semibold underline flex gap-0.5 text-sm"
           >
-            <span>view all providers</span>
+            <span> {t("viewProviders")}</span>
             {isRtl ? (
               <ChevronLeft width={20} height={20} />
             ) : (

@@ -7,7 +7,6 @@ import { Bookmark } from "lucide-react";
 import NavMenu from "../ui/NavMenu";
 import LanguageSwitcher from "../ui/LanguageSwitcher";
 import MobileMenu from "../ui/MobileMenu";
-import SearchC from "../ui/Search";
 import Image from "next/image";
 import UserDropDown from "../ui/UserDropDown";
 import SearchHeader from "./SearchHeader";
@@ -43,10 +42,11 @@ const Header = async () => {
         <div className="right hidden md:flex items-center gap-4">
           {token && (
             <div className="py-3 px-5 rounded-2xl hover:bg-white cursor-pointer duration-150 font-semibold">
-              Request a quote
+              {t("requestQuote")}
             </div>
           )}
-          <LanguageSwitcher />
+          <LanguageSwitcher type="desktop" />
+
           {token ? (
             <>
               <Link
@@ -75,7 +75,10 @@ const Header = async () => {
             </>
           )}
         </div>
-        <MobileMenu />
+        <div className=" flex gap-6 md:hidden">
+          <LanguageSwitcher type="mobileHeader" className="md:hidden" />
+          <MobileMenu />
+        </div>
       </div>
     </header>
   );

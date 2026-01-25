@@ -1,6 +1,6 @@
 "use client";
 import { Globe } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 
 const LanguageSwitcher = ({
@@ -8,7 +8,7 @@ const LanguageSwitcher = ({
   type,
 }: {
   className?: string;
-  type?: string;
+  type?: "mobile" | "desktop" | "mobileHeader";
 }) => {
   const t = useTranslations("Header");
   const router = useRouter();
@@ -33,7 +33,11 @@ const LanguageSwitcher = ({
       tabIndex={0}
       onClick={togglePageDirection}
     >
-      {type !== "mobile" ? <span>{t("lang")}</span> : <span>Language</span>}
+      {type === "desktop" ? (
+        <span>{t("lang")}</span>
+      ) : type === "mobile" ? (
+        <span>{isRtl ? "اللغة" : "Language"}</span>
+      ) : null}
       <Globe
         width={type === "mobile" ? 20 : 24}
         height={type === "mobile" ? 20 : 24}

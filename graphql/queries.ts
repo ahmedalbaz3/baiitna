@@ -118,9 +118,9 @@ export const MOST_SERVICE_QUERY = gql`
 `;
 
 export const PROVIDERS_QUERY = gql`
-  query AllProviders($serviceId: String, $limit: Int!) {
+  query AllProviders($serviceId: String, $limit: Int!, $cityName: String) {
     allProviders(
-      filter: { serviceId: $serviceId }
+      filter: { serviceId: $serviceId, cityName: $cityName }
       paginate: { limit: $limit }
     ) {
       code

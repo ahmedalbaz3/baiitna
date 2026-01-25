@@ -49,7 +49,21 @@
     "signup": "Sign Up",
     "lang": "العربية",
     "logoTitle": "baiitna",
-    "logoAlt": "Baiitna Logo"
+    "logoAlt": "Baiitna Logo",
+    "requestQuote": "Request a Quote",
+    "navDropDown": {
+      "title": "Provider Categories",
+      "viewProviders": "View All Providers",
+      "viewCategories": "View All Categories"
+    },
+    "userMenu": {
+      "settings": "Settings",
+      "ticket": "Support Ticket",
+      "logout": "Logout",
+      "about": "About Us",
+      "faq": "FAQ",
+      "quote": "My Quotation Requests"
+    }
   },
   "Footer": {
     "description": "baiitna, making it simple to find the right experts in your city.",
@@ -89,5 +103,24 @@
       "passwordNumber": "Password must contain at least one number.",
       "passwordSpecial": "Password must contain at least one special character (@$!%*?&)."
     }
+  },
+  "MobileMenu": {
+    "about": "About Us",
+    "business": "baiitna for Business",
+    "blog": "Blog",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "login": "Login",
+    "signup": "Sign Up",
+    "language": "Language",
+    "join": "Join as a provider",
+    "services": "Services",
+    "favorites": "Favorites List",
+    "quotes": "Requested a Quote",
+    "notifications": "Notifications",
+    "settings": "Settings",
+    "support": "Support Tickets",
+    "logout": "Logout",
+    "showAllServices": "Show All Services"
   }
 }

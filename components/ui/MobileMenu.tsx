@@ -7,19 +7,27 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import useUserAuth from "@/store/useUserAuth";
-import { useMutation, useQuery } from "@apollo/client/react";
+import { useQuery } from "@apollo/client/react";
 import { ME_QUERY } from "@/graphql/queries";
 import { User } from "@/types/loginResponse";
+import { useLocale, useTranslations } from "next-intl";
 
 const list = [
-  { title: "About Us", href: "/about" },
-  { title: "Baiitna for business", href: "/business" },
-  { title: "Blog", href: "/blog" },
-  { title: "Contact", href: "/contact" },
-  { title: "FAQ", href: "/faq" },
+  { title: "About Us", titleAr: "عنّا", href: "/about" },
+  {
+    title: "Baiitna for business",
+    titleAr: "بيتنا للأعمال",
+    href: "/business",
+  },
+  { title: "Blog", titleAr: "المدونة", href: "/blog" },
+  { title: "Contact", titleAr: "اتصل بنا", href: "/contact" },
+  { title: "FAQ", titleAr: "الأسئلة الشائعة", href: "/faq" },
 ];
 
-const MobileMenu = () => {
+const MobileMenu = ({ className }: { className?: string }) => {
+  const t = useTranslations("MobileMenu");
+  const locale = useLocale();
+  const isRtl = locale === "ar" ? true : false;
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
 
@@ -49,11 +57,11 @@ const MobileMenu = () => {
   }, [data, updateUser]);
 
   return (
-    <div className="md:hidden">
+    <div className={`md:hidden ${className}`}>
       <Menu onClick={() => setOpen(true)} />
 
       <div
-        className={`  absolute top-0 right-0 duration-150 h-dvh   ${
+        className={`  absolute top-0 end-0 duration-150 h-dvh   ${
           open ? "z-40" : "opacity-0 -z-50 hidden"
         }`}
       >
@@ -64,7 +72,7 @@ const MobileMenu = () => {
             setServicesOpen(false);
           }}
         ></div>
-        <div className="flex flex-col top-0 right-0 bg-white duration-150 h-dvh w-[75dvw] absolute overflow-y-auto">
+        <div className="flex flex-col top-0 end-0 bg-white duration-150 h-dvh w-[75dvw] absolute overflow-y-auto">
           <div
             className={`head flex items-center justify-between px-4 py-6 ${
               servicesOpen ? "hidden" : ""
@@ -92,12 +100,20 @@ const MobileMenu = () => {
                 className={`${servicesOpen ? "" : "hidden"}`}
               />
 
-              <span>Services</span>
-              <ChevronRight
-                width={20}
-                height={20}
-                className={`${servicesOpen ? "hidden" : ""}`}
-              />
+              <span>{t("services")}</span>
+              {isRtl ? (
+                <ChevronLeft
+                  width={20}
+                  height={20}
+                  className={`${servicesOpen ? "hidden" : ""}`}
+                />
+              ) : (
+                <ChevronRight
+                  width={20}
+                  height={20}
+                  className={`${servicesOpen ? "hidden" : ""}`}
+                />
+              )}
             </div>
             <div
               className={`p-4  text-base font-medium flex flex-col gap-8 ${
@@ -114,14 +130,16 @@ const MobileMenu = () => {
                 <li>service 1</li>
               </ul>
               <Link href="/services" className=" text-primary">
-                Show All Services
+                {t("showAllServices")}
               </Link>
             </div>
           </div>
           <ul className="text-sm font-semibold px-4 py-6 border-b border-b-gray-300 flex flex-col gap-5">
             {list.map((item, index) => (
               <li key={index}>
-                <Link href={item.href}>{item.title}</Link>
+                <Link href={item.href}>
+                  {isRtl ? item.titleAr : item.title}
+                </Link>
               </li>
             ))}
           </ul>
@@ -134,7 +152,7 @@ const MobileMenu = () => {
                     type="mobile"
                   />
                 </div>
-                <p>العربيه</p>
+                <p>{!isRtl ? "العربية" : "English"}</p>
               </div>
               <div className="actions flex flex-col gap-5 w-full">
                 <Button

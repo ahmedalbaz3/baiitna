@@ -60,9 +60,12 @@ const ServiceCard = ({
           </div>
         </div>
         <div className="text space-y-1 pt-7">
-          <h3 className="text-lg font-semibold text-gray-900">
+          <Link
+            href={profileLink}
+            className="text-base font-semibold text-gray-900 cursor-pointer hover:text-primary duration-150"
+          >
             {isRtl ? titleAr : titleEn}
-          </h3>
+          </Link>
           <p className="text-sm text-gray-500">
             {isRtl
               ? descriptionAr?.length > 40

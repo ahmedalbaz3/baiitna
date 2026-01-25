@@ -110,7 +110,6 @@ const SearchC = ({
       setComponentHidden(false);
     } else {
       setComponentHidden(true);
-      setSearchInput("");
     }
   }, [scrollPosition]);
 
@@ -187,10 +186,8 @@ const SearchC = ({
           </div>
         </div>
         <div
-          className={`search-screen absolute top-full left-1/2 -translate-x-1/2 xl:translate-x-0 xl:left-auto xl:right-0 mt-3 duration-200 shadow-2xl z-30 rounded-2xl bg-white w-4xl max-w-[96vw] max-h-[408px] overflow-hidden  ${
-            searchInput
-              ? "opacity-100 h-[408px]"
-              : "h-0 opacity-0 pointer-events-none"
+          className={`search-screen absolute top-full left-1/2 -translate-x-1/2 xl:translate-x-0 xl:left-auto xl:right-0 mt-3 duration-300 shadow-2xl z-30 rounded-2xl bg-white w-4xl max-w-[96vw]  overflow-hidden  ${
+            searchInput ? "opacity-100 " : "h-0 opacity-0 pointer-events-none"
           }`}
         >
           <div

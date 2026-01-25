@@ -5,6 +5,7 @@ import Hero from "@/components/pages/home/Hero";
 import PopularServices from "@/components/pages/home/PopularServices";
 import Providers from "@/components/pages/home/Providers";
 import JsonLd from "@/components/seo/JsonLd";
+import { cookies } from "next/headers";
 
 import {
   getBreadcrumbSchema,
@@ -12,6 +13,8 @@ import {
   getWebPageSchema,
 } from "@/lib/schemas/schema";
 import { getTranslations } from "next-intl/server";
+import { ME_QUERY } from "@/graphql/queries";
+import { query } from "@/lib/apollo/server";
 
 export default async function Home({
   params,
@@ -32,6 +35,7 @@ export default async function Home({
       webPAgeSchema,
       breadcrumbSchema,
       imageObjectSchema,
+
       {
         "@type": "WebSite",
         name: "Baiitna",
@@ -39,6 +43,21 @@ export default async function Home({
       },
     ],
   };
+
+  const cookieStore = await cookies();
+  const token = cookieStore.get("auth-token");
+
+  if (token) {
+    const { data } = await query({
+      query: ME_QUERY,
+      // If you need to pass the token from cookies:
+      context: {
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
+      },
+    });
+  }
 
   return (
     <>

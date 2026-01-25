@@ -44,7 +44,7 @@ const PopularServices = async () => {
         <Link href="/profile-setup" className="self-center mt-10">
           <Button
             text={t("viewAll")}
-            className="hover:bg-hover text-text-primary"
+            className="hover:bg-hover text-text-primary bg-primary"
           />
         </Link>
       </div>

@@ -62,5 +62,32 @@
     "privacy": "Privacy Policy",
     "terms": "Terms and Conditions",
     "rights_reserved": "baiitna. All rights reserved."
+  },
+  "Auth": {
+    "newHeading": "Join baiitna for free",
+    "existingHeading": "Welcome back to baiitna",
+    "emailLabel": "Email address",
+    "passwordLabel": "Password",
+    "firstNameLabel": "First Name",
+    "lastNameLabel": "Last Name",
+    "haveAccount": "Already have an account?",
+    "noAccount": "Don’t have an account yet?",
+    "forgotPassword": "Forgot your password?",
+    "signInButton": "Login",
+    "signUpButton": "Sign Up",
+    "googleButton": "Continue with Google",
+    "appleButton": "Continue with Apple",
+    "joinButton": "Join Now",
+    "errors": {
+      "emailRequired": "Email is a required field.",
+      "emailInvalid": "Please enter a valid email address.",
+      "passwordInvalid": "Password must contain at least 8 characters, including uppercase, lowercase, number, and special character.",
+      "passwordRequired": "Password is a required field.",
+      "passwordMinLength": "Password must be at least 8 characters long.",
+      "passwordUppercase": "Password must contain at least one uppercase letter.",
+      "passwordLowercase": "Password must contain at least one lowercase letter.",
+      "passwordNumber": "Password must contain at least one number.",
+      "passwordSpecial": "Password must contain at least one special character (@$!%*?&)."
+    }
   }
 }

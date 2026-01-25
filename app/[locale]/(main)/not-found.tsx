@@ -18,7 +18,7 @@ export default function NotFound() {
         address bar or back to the homepage.
       </p>
       <Link href="/">
-        <Button text="Return Home" className="w-fit  mx-auto" />
+        <Button text="Return Home" className="w-fit  mx-auto bg-primary" />
       </Link>
     </div>
   );

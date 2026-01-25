@@ -117,3 +117,11 @@
   background-size: 200% 100%;
   animation: shimmer 3s infinite linear;
 }
+
+.input-field {
+  @apply h-12 rounded-2xl border block w-full px-3.75 py-2.5 focus:outline-none  duration-150;
+}
+
+.label-block {
+  @apply block mb-2 text-base font-semibold;
+}

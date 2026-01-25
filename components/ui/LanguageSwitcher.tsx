@@ -20,7 +20,12 @@ const LanguageSwitcher = ({
   pathSegments[1] = newLocale;
 
   const togglePageDirection = () => {
-    router.push(pathSegments.join("/"));
+    if (newLocale === "ar") {
+      const newUrl = `/ar${pathname}`;
+      router.push(newUrl);
+      return;
+    }
+    router.push("/" + pathSegments.slice(1).join("/"));
   };
   return (
     <div

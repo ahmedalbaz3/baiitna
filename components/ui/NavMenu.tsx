@@ -86,17 +86,25 @@ const NavMenu = ({ title }: { title: string }) => {
         <div className="footer flex gap-8 whitespace-nowrap">
           <Link
             href="/"
-            className="text-primary font-semibold underline flex gap-1"
+            className="text-primary font-semibold underline flex gap-1 text-sm"
           >
             <span>Explore all categories</span>
-            {isRtl ? <ChevronLeft /> : <ChevronRight />}
+            {isRtl ? (
+              <ChevronLeft width={20} height={20} />
+            ) : (
+              <ChevronRight width={20} height={20} />
+            )}
           </Link>
           <Link
             href="/"
-            className="text-primary font-semibold underline flex gap-1"
+            className="text-primary font-semibold underline flex gap-0.5 text-sm"
           >
             <span>view all providers</span>
-            {isRtl ? <ChevronLeft /> : <ChevronRight />}
+            {isRtl ? (
+              <ChevronLeft width={20} height={20} />
+            ) : (
+              <ChevronRight width={20} height={20} />
+            )}
           </Link>
         </div>
       </div>

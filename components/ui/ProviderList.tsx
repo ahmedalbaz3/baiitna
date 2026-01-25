@@ -12,8 +12,6 @@ const ProviderList = ({ serviceId }: { serviceId: string }) => {
     variables: { serviceId: serviceId, limit: 4 },
   });
 
-  console.log(data);
-
   return (
     <div className={`min-h-[456px] w-full mx-auto `}>
       {loading && (

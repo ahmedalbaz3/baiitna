@@ -1,11 +1,15 @@
 "use client";
 import { Menu, X, ChevronRight, Globe, ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Button from "../shared/Button";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import useUserAuth from "@/store/useUserAuth";
+import { useMutation, useQuery } from "@apollo/client/react";
+import { ME_QUERY } from "@/graphql/queries";
+import { User } from "@/types/loginResponse";
 
 const list = [
   { title: "About Us", href: "/about" },
@@ -19,12 +23,30 @@ const MobileMenu = () => {
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
 
+  const token = useUserAuth((state) => state.token);
+  const updateUser = useUserAuth((state) => state.updateUser);
+
   const path = usePathname();
 
   useEffect(() => {
     setOpen(false);
     setServicesOpen(false);
   }, [path]);
+
+  const { data } = useQuery<{ me: { data: User } }>(ME_QUERY, {
+    skip: !token,
+    context: {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    },
+  });
+
+  useEffect(() => {
+    if (data?.me) {
+      updateUser(data.me.data);
+    }
+  }, [data, updateUser]);
 
   return (
     <div className="md:hidden">
@@ -117,7 +139,7 @@ const MobileMenu = () => {
               <div className="actions flex flex-col gap-5 w-full">
                 <Button
                   text="Join as a Provider"
-                  className="w-full hover:bg-hover text-text-primary"
+                  className="w-full hover:bg-hover text-text-primary bg-primary"
                 />
                 <Button
                   text="Sign Up"

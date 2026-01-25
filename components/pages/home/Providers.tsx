@@ -104,7 +104,7 @@ const Providers = () => {
           >
             {loading && !data ? (
               <>
-                {[1, 2, 3, 4, 5, 6, 7, 8 ].map((_, i) => (
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((_, i) => (
                   <Skeleton
                     key={i}
                     className="h-6 w-[calc(100vw/8)] min-w-[80px] mr-4"
@@ -145,7 +145,7 @@ const Providers = () => {
         <Link href="/profile-setup" className="self-center mt-10">
           <Button
             text={t("viewAll")}
-            className="hover:bg-hover text-text-primary"
+            className="hover:bg-hover text-text-primary bg-primary"
           />
         </Link>
       </div>

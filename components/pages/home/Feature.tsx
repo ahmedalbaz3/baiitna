@@ -42,7 +42,7 @@ const Feature = async () => {
             {steps.map((step, index) => (
               <div
                 key={index}
-                className={`relative font-semibold p-6 flex h-[300px] rounded-2xl ${step.color}`}
+                className={`relative font-semibold p-6 flex h-[300px] rounded-[20px] ${step.color}`}
               >
                 <div className="flex flex-col justify-between relative z-10 items-start">
                   <span className="pb-10 md:pb-21 w-full text-2xl md:text-5xl">

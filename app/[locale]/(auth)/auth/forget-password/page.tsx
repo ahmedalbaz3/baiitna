@@ -11,9 +11,11 @@ import {
 } from "@/graphql/queries";
 import Link from "next/link";
 import OTPCheck from "@/components/ui/OTP/OTPCheck";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const t = useTranslations("Auth");
+  const router = useRouter();
 
   const [formState, setFormState] = useState({
     email: { value: "", error: "", isValid: true },
@@ -278,15 +280,30 @@ const Page = () => {
     },
     onCompleted: (data) => {
       console.log(data);
-      if (data.changePassword.code === 200) {
+      if (data.resetPassword.code === 200) {
         alert("Password changed successfully! You can now log in.");
-        // Optionally redirect to login page
+
+        router.push("/auth/");
       } else {
-        alert("Error changing password: " + data.changePassword.message);
+        alert("Error changing password: " + data.resetPassword.message);
       }
     },
     onError: (error) => alert("Error: " + error.message),
   });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!codeSent) {
+      handleSendCode();
+    } else if (!codeVerified) {
+      handleVerifyCode();
+    } else {
+      if (formState.password.isValid && formState.confirmPassword.isValid) {
+        submitChangePassword();
+      }
+    }
+  };
 
   return (
     <div className="login w-full min-h-screen ">
@@ -294,8 +311,7 @@ const Page = () => {
         <form
           className="auth-screen bg-white p-10 rounded-4xl w-full max-w-162.5"
           onSubmit={(e) => {
-            e.preventDefault();
-            codeSent ? handleVerifyCode() : handleSendCode();
+            handleSubmit(e);
           }}
         >
           <h1 className="text-[25px] font-semibold mb-3">
@@ -389,7 +405,6 @@ const Page = () => {
             />
           ) : (
             <Button
-              onClick={() => submitChangePassword()}
               text="Save new password"
               className="w-full mt-5 bg-primary hover:bg-primary/90"
               type="submit"

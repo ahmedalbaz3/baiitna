@@ -57,7 +57,7 @@ const Feature = async () => {
                   alt={step.altText}
                   width={400}
                   height={540}
-                  className={`max-h-[90%] max-w-[60%] absolute bottom-0 object-contain ${
+                  className={`max-h-[90%] max-w-[60%] absolute bottom-1/2 translate-y-1/2 object-contain ${
                     direction === "rtl" ? "left-0 -scale-x-100" : "right-0"
                   }`}
                 />

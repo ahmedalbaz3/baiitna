@@ -15,7 +15,7 @@ const Hero = async () => {
             {t("description")}
           </p>
         </div>
-        <div className="search mt-12 ">
+        <div className="search mt-12 w-full max-w-2xl mx-auto ">
           <SearchC className="" type="hero" />
         </div>
       </div>

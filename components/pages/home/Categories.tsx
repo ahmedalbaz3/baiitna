@@ -24,7 +24,7 @@ const Categories = async () => {
             <Link
               key={category.id}
               href="/"
-              className="flex flex-col items-center justify-between gap-3  mb-2  me-2 py-[30] px-6 bg-background hover:text-primary text-center rounded-2xl overflow-hidden"
+              className="flex flex-col items-center justify-between gap-3  mb-2  me-2 py-7.5 px-6 bg-background hover:text-primary text-center rounded-2xl overflow-hidden"
             >
               <div className="image relative rounded-lg overflow-hidden w-[38px] h-[38px] md:w-[56px] md:h-[56px]">
                 <div className="relative w-full h-full overflow-hidden bg-[#f6f7f8] animate-shimmer">
